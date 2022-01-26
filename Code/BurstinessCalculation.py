@@ -34,11 +34,11 @@ parser.add_argument("-n","--numproc",required=True,type=int)
 args = parser.parse_args()
 
 #Load in simulation info from config files
-Sims = pickle.load(open('SimulationInfo.pickle','rb'))
+Sims = pickle.load(open('Code/SimulationInfo.pickle','rb'))
 
 #Load in datafile
 try:
-    Datafile = pickle.load(open('../BurstinessData.pickle','rb'))
+    Datafile = pickle.load(open('BurstinessData.pickle','rb'))
     print('Datafile Loaded.')
 except:
     print('No Datafile found, writing new one...')
@@ -83,7 +83,7 @@ for halo in Sims[args.simulation]['halos']:
     Datafile[args.simulation][halo] = SimData[halo]
 
 #Write out updated Datafile
-out = open('../BurstinessData.pickle','wb')
+out = open('BurstinessData.pickle','wb')
 pickle.dump(Datafile,out)
 out.close()
 print('Datafile updated.')
