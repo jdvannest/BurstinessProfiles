@@ -10,6 +10,8 @@ try:
 except:
     print('No config files found. Creating new ones...')
     os.system('python Code/Config.py')
+    os.system('mv Config.pickle Code/')
+    os.system('mv SimulationInfo.pickle Code/')
     config = pickle.load(open('Code/Config.pickle','rb'))
 
 if args.simulation in ['cptmarvel','elektra','storm','rogue','h148','h229','h242','h329']:
