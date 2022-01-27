@@ -1,5 +1,6 @@
-import argparse,pickle,pynbody,pymp,sncalc,sys
+import argparse,pickle,pynbody,pymp,sncalc,sys,warnings
 import numpy as np
+warnings.filterwarnings("ignore")
 def myprint(string,clear=False):
     if clear:
         sys.stdout.write("\033[F")
@@ -80,7 +81,7 @@ with pymp.Parallel(args.numproc) as pl:
 
 #Copy data over from shared dictionary to Datafile
 for halo in Sims[args.simulation]['halos']:
-    Datafile[args.simulation][halo] = SimData[halo]
+    Datafile[args.simulation][str(halo)] = SimData[str(halo)]
 
 #Write out updated Datafile
 out = open('BurstinessData.pickle','wb')
