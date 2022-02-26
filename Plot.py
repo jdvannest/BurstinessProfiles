@@ -6,10 +6,24 @@ def myprint(string,clear=False):
         sys.stdout.write("\033[F")
         sys.stdout.write("\033[K") 
     print(string)
+
 def smooth(y, box_pts):
     box = np.ones(box_pts)/box_pts
     y_smooth = np.convolve(y, box, mode='same')
     return y_smooth
+'''
+def smooth(x,window_len=11,window='hanning'):
+    #from Serena Sligh
+    if window_len<3:
+        return x
+    s=np.r_[x[window_len-1:0:-1],x,x[-2:-window_len-1:-1]]
+    if window == 'flat': #moving average
+        w=np.ones(window_len,'d')
+    else:
+        w=eval('np.'+window+'(window_len)')
+    y=np.convolve(w/w.sum(),s,mode='valid')
+    return y
+'''
 
 data = pickle.load(open('BurstinessData.pickle','rb'))
 
@@ -20,6 +34,7 @@ for sim in ['cptmarvel', 'elektra', 'storm', 'rogue']:
 
 print('Plotting: 0.00%')
 done = 0
+sm = 100 #smoothing window
 for sim in ['cptmarvel', 'elektra', 'storm', 'rogue']:
     for hnum in data[sim]:
         halo = data[sim][hnum]
@@ -30,7 +45,9 @@ for sim in ['cptmarvel', 'elektra', 'storm', 'rogue']:
         ax.bar(bins,snr,width=bins[1]-bins[0],color='0.75')
         ax2 = ax.twinx()
         ax2.set_ylim([-1,1])
-        ax2.plot(halo['Burstiness']['50 Time'],smooth(halo['Burstiness']['50 Data'],500),c='crimson',linewidth=3)
+        ax2.plot(halo['Burstiness']['50 Time'],halo['Burstiness']['50 Data'],c='crimson',linewidth=3)
+        #ax2.plot(halo['Burstiness']['50 Time'],smooth(halo['Burstiness']['50 Data'],500),c='crimson',linewidth=3)
+        #ax2.plot(halo['Burstiness']['50 Time'][np.arange(0,len(halo['Burstiness']['50 Time']),sm)],halo['Burstiness']['50 Data'][np.arange(0,len(halo['Burstiness']['50 Time']),sm)],c='crimson',linewidth=3)
 
         ax.tick_params(labelsize=15)
         ax.set_xlabel('Time [Gyr]',fontsize=20)
