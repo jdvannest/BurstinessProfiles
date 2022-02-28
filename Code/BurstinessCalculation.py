@@ -14,9 +14,9 @@ def BurstinessCalculation(snr,bins,binning=50):
     snr_mean = np.empty(len(snr)-binning)
     snr_std = np.empty(len(snr)-binning)
     snr_time = np.empty(len(snr)-binning)
-    snr_mean[:] = np.NaN
-    snr_std[:] = np.NaN
-    snr_time[:] = np.NaN
+    snr_mean[:] = -1#np.NaN
+    snr_std[:] = -1#np.NaN
+    snr_time[:] = -1#np.NaN
 
     j = 0
     while j<len(snr_mean):
