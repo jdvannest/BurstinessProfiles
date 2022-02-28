@@ -1,4 +1,4 @@
-import argparse,pickle,pynbody,pymp,sncalc,sys,warnings
+import argparse,os,pickle,pynbody,pymp,sncalc,sys,warnings
 import numpy as np
 warnings.filterwarnings("ignore")
 def myprint(string,clear=False):
@@ -32,20 +32,28 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-s","--simulation",
                     choices=['cptmarvel','elektra','storm','rogue','h148','h229','h242','h329'])
 parser.add_argument("-n","--numproc",required=True,type=int)
+parser.add_argument("-o","--overwrite",action='store_true')
 args = parser.parse_args()
 
 #Load in simulation info from config files
 Sims = pickle.load(open('Code/SimulationInfo.pickle','rb'))
 
-#Load in datafile
-try:
-    Datafile = pickle.load(open('BurstinessData.pickle','rb'))
-    print('Datafile Loaded.')
-except:
-    print('No Datafile found, writing new one...')
+#Load in datafile or Overwrite existing one
+if args.overwrite:
+    print('Overwriting Datafile')
+    os.system('rm Data/BurstinessData.pickle')
     Datafile = {}
     for sim in Sims:
         Datafile[sim] = {}
+else:
+    try:
+        Datafile = pickle.load(open('Data/BurstinessData.pickle','rb'))
+        print('Datafile Loaded.')
+    except:
+        print('No Datafile found, writing new one...')
+        Datafile = {}
+        for sim in Sims:
+            Datafile[sim] = {}
 
 #Load in simulation
 print(f'Loading {args.simulation}...')
@@ -84,7 +92,7 @@ for halo in Sims[args.simulation]['halos']:
     Datafile[args.simulation][str(halo)] = SimData[str(halo)]
 
 #Write out updated Datafile
-out = open('BurstinessData.pickle','wb')
+out = open('Data/BurstinessData.pickle','wb')
 pickle.dump(Datafile,out)
 out.close()
 print('Datafile updated.')
