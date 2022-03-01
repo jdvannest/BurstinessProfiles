@@ -26,6 +26,7 @@ def BurstinessCalculation(snr,bins,binning=50):
         j+=1
 
     burstiness = (snr_std/snr_mean-1)/(snr_std/snr_mean+1)
+    burstiness = np.nan_to_num(burstiness,nan=-1)
     return burstiness,snr_time
 
 parser = argparse.ArgumentParser()

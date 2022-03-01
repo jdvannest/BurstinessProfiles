@@ -7,7 +7,7 @@ def myprint(string,clear=False):
         sys.stdout.write("\033[F")
         sys.stdout.write("\033[K") 
     print(string)
-'''
+
 def smooth(array,window=10):
     return np.nanmean(np.pad(array,(0,window-len(array)%window),'constant',constant_values=np.NaN).reshape((-1,window)),axis=1)
 '''
@@ -15,7 +15,7 @@ def smooth(y, box_pts):
     box = np.ones(box_pts)/box_pts
     y_smooth = np.convolve(y, box, mode='same')
     return y_smooth
-'''
+
 def smooth(x,window_len=11,window='hanning'):
     #from Serena Sligh
     if window_len<3:
@@ -45,10 +45,11 @@ done = 0
 for sim in ['cptmarvel', 'elektra', 'storm', 'rogue']:
     for hnum in data[sim]:
         halo = data[sim][hnum]
+        halo['Burstiness']['50 Data'] = np.nan_to_num(halo['Burstiness']['50 Data'],nan=-1)
 
         #Smooth the Burstiness arrays
-        sm_burst = smooth(halo['Burstiness']['50 Data'],250) 
-        sm_time = halo['Burstiness']['50 Time']
+        sm_burst = smooth(halo['Burstiness']['50 Data'],10) 
+        sm_time = smooth(halo['Burstiness']['50 Time'],10)
 
         #Determine active burstiness window
         active = np.where(sm_time<max(tform[sim][hnum]['tform']))[0]
